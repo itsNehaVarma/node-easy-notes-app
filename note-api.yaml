@@ -1,0 +1,189 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: Note API
+  contact: {}
+host: 127.0.0.1:3000
+basePath: /
+securityDefinitions: {}
+schemes:
+- http
+consumes:
+- application/json
+produces:
+- application/json
+- file
+tags:
+- name: "Notes"
+  description: "Operations about Notes" 
+x-tagGroups:
+- name: NoteApp
+  tags: 
+  - Notes
+security:
+  - JWT: []
+paths:
+  /notes:
+    get:
+      summary: Get all Notes
+      tags:
+      - Notes
+      operationId: getNotes
+      deprecated: false
+      parameters:
+      - $ref: '#/parameters/parmContentType'
+      responses:
+        '200':
+          description: 'Return all notes'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Note'
+        '400':
+          description: Invalid Request or Bad Request
+          schema:
+            $ref: '#/definitions/BadRequest'
+        '404':
+          description: "Not found"
+        '500':
+          description: Internal Server Exception
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Add new Note
+      tags:
+      - Notes
+      operationId: addNote
+      deprecated: false
+      produces:
+      - application/json
+      consumes:
+      - application/json
+      parameters:
+      - $ref: '#/parameters/parmContentType'
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/Note'
+      responses:
+        200:
+          description: ''
+          headers: {}
+  /notes/{id}: 
+    get:
+      summary: Get Note by id
+      tags:
+      - Notes
+      operationId: getNote
+      deprecated: false
+      parameters:
+      - $ref: '#/parameters/parmContentType'
+      - name: id
+        in: path
+        required: true
+        type: string
+      responses:
+        '200':
+          description: 'Return Note where matches id'
+          schema:
+            $ref: '#/definitions/Note'
+        '400':
+          description: Invalid Request or Bad Request
+          schema:
+            $ref: '#/definitions/BadRequest'
+        '404':
+          description: "Not found"
+        '500':
+          description: Internal Server Exception
+          schema:
+            $ref: '#/definitions/Error'       
+    put:
+      summary: Update Note
+      tags:
+      - Notes
+      operationId: updateNote
+      deprecated: false
+      produces:
+      - application/json
+      consumes:
+      - application/json
+      parameters:
+      - $ref: '#/parameters/parmContentType'
+      - name: id
+        in: path
+        required: true
+        type: string
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/Note'
+      responses:
+        200:
+          description: ''
+          headers: {}
+    delete:
+      summary: Delete Note
+      tags:
+      - Notes
+      operationId: deleteNote
+      deprecated: false
+      produces:
+      - application/json
+      consumes:
+      - application/json
+      parameters:
+      - $ref: '#/parameters/parmContentType'
+      - name: problemId
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: ''
+          headers: {}   
+
+parameters:
+  parmContentType:
+    in: header
+    name: content_type
+    type: string
+    required: true
+    description: application/json   
+    
+definitions:
+  Error:
+    type: object
+    description: Error code and error message
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+  BadRequest:
+      type: object
+      description: Details of all failed input validations.
+      properties:
+        code:
+          type: string
+        message:
+          type: string 
+  Note:
+    type: object
+    required:
+    - title
+    - content 
+    properties:
+      title:
+        type: string
+        description: Title of Note
+        example: 'Heading'
+      content:
+        type: string
+        description: Cotent of the note
+        example: 'Lorem Ipsum'
+          
+  

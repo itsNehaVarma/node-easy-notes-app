@@ -2,8 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dbConfig = require('./config/database.config.js');
 const mongoose = require('mongoose');
+const swaggerUi = require('swagger-ui-express');
+const YAMLJS = require('yamljs');
+const swaggerDocument = YAMLJS.load('./note-api.yaml');
 
 const app = express();
+
+var options = {
+    explorer: true
+};
 
 mongoose.Promise = global.Promise;
 
@@ -12,6 +19,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 // Connecting to the database
 mongoose.connect(dbConfig.url, {
